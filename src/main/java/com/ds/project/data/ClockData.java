@@ -1,9 +1,8 @@
 package com.ds.project.data;
 
 public class ClockData {
-	private int id;
 
-	private long timeMilli;
+	private Long timeMilli;
 
 	private String showDate;
 
@@ -17,11 +16,9 @@ public class ClockData {
 
 	/**
 	 * 通过存储字符串初始化时钟
-	 * @param id	id
 	 * @param str	存储字符串
 	 */
-	protected ClockData(int id, String str){
-		this.id = id;
+	protected ClockData(String str){
 		int index = str.indexOf(',');
 		resetTime(Long.parseLong(str.substring(0, index)), str.substring(index + 1));
 	}
@@ -32,6 +29,7 @@ public class ClockData {
 	 * @return	true表示接近
 	 */
 	public boolean checkTimeClose(long timeMilli){
+		if(this.timeMilli == null) return false;
 		long timeDiff = timeMilli % DAY_MILLI - this.timeMilli;
 		return timeDiff >= 0 && timeDiff <= MINUTE_MILLI;
 	}
@@ -47,14 +45,6 @@ public class ClockData {
 
 		this.showDate = String.format("%02d:%02d",
 			this.timeMilli / HOUR_MILLI + 8, (this.timeMilli % HOUR_MILLI) / MINUTE_MILLI);
-	}
-
-	public int getId(){
-		return id;
-	}
-
-	public void setId(int id){
-		this.id = id;
 	}
 
 	public String getShowDate() {

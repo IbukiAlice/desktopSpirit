@@ -1,6 +1,6 @@
-# Default ignored files
 .idea/
 out/
 
 /db.dat
 /*.iml
+MANIFEST.MF

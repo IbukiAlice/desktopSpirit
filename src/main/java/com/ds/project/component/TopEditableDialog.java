@@ -1,6 +1,5 @@
 package com.ds.project.component;
 
-import com.ds.project.data.ClockData;
 import com.ds.project.data.DataSource;
 import com.ds.project.layout.VerticalFlowLayout;
 import com.ds.project.preset.FollowDialog;
@@ -8,7 +7,6 @@ import com.ds.project.preset.HideScrollBarUI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 /**
  * 顶部可编辑弹窗
@@ -33,14 +31,15 @@ public class TopEditableDialog extends FollowDialog {
 		setContentPane(scrollPane);
 
 		// 设置展示面板
-		panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP));	// 垂直流布局
+		panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP));			// 垂直流布局
 		panel.setOpaque(false);														// 面板透明
 		panel.setSize(getSize());
 		scrollPane.setViewportView(panel);
 
 		// 添加已有的闹钟栏
-		for (ClockData clock : DataSource.me().getClocks()) {
-			panel.add(new ClockItemPanel(clock.getId(), this));
+		int len = DataSource.me().getClockCount();
+		for (int i = 0; i < len; i++) {
+			panel.add(new ClockItemPanel(i, this));
 		}
 
 		// 添加"添加"按钮（保持在最底部）
@@ -49,8 +48,8 @@ public class TopEditableDialog extends FollowDialog {
 		addButton.setContentAreaFilled(false);
 		addButton.setBorderPainted(false);
 		addButton.addActionListener(e -> {
-			ClockData clockData = DataSource.me().newClock();
-			ClockItemPanel clockItemPanel = new ClockItemPanel(clockData.getId(), this);
+			DataSource.me().newClock();
+			ClockItemPanel clockItemPanel = new ClockItemPanel(DataSource.me().getClockCount() - 1, this);
 			panel.add(clockItemPanel, panel.getComponentCount() - 1);		// 保证添加按钮在最底部
 			panel.updateUI();
 		});
@@ -90,12 +89,11 @@ public class TopEditableDialog extends FollowDialog {
 	public void removeSelfAndUpdateOtherClockItemPanel(ClockItemPanel clockItemPanel){
 		panel.remove(clockItemPanel);
 
-		List<ClockData> clockList = DataSource.me().getClocks();
+		DataSource.me().removeClock(clockItemPanel.getClockId());
 		int i = 0;
 		for (Component c : panel.getComponents()) {
 			if(c instanceof ClockItemPanel){
-				((ClockItemPanel) c).setInfo(clockList.get(i).getId());
-				++i;
+				((ClockItemPanel) c).updateInfo(i++);
 			}
 		}
 		panel.updateUI();

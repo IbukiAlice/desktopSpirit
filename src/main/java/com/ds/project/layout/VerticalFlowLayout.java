@@ -19,6 +19,8 @@ import java.awt.LayoutManager;
  * </ul>
  * A vertical flow layout lets each component assume its natural (preferred)
  * size.
+ *
+ * @author https://blog.csdn.net/watermelon_csdn/article/details/99710705
  */
 public class VerticalFlowLayout implements LayoutManager {
 

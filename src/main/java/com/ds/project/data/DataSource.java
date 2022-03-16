@@ -1,6 +1,9 @@
 package com.ds.project.data;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,34 +30,39 @@ public class DataSource {
 		return Collections.unmodifiableList(clocks);
 	}
 
-	public ClockData getClock(int id){
-		return clocks.get(id - 1);
+	public int getClockCount(){
+		return clocks.size();
 	}
 
-	public ClockData newClock(){
-		ClockData clockData = new ClockData();
-		clockData.setId(clocks.size() + 1);
-		clocks.add(clockData);
-		return clockData;
+	public ClockData getClock(int id){
+		return clocks.get(id);
+	}
+
+	public void resetClock(int id, long timeMilli, String text){
+		clocks.get(id).resetTime(timeMilli, text);
+		overwriteData();
+	}
+
+	public void newClock(){
+		clocks.add(new ClockData());
+		overwriteData();
 	}
 
 	public void removeClock(int id){
-		clocks.removeIf(o -> o.getId() == id);
-		clocks.forEach(o -> {
-			if(o.getId() > id) o.setId(o.getId() - 1);
-		});
+		clocks.remove(id);
+		overwriteData();
 	}
 
 	// 文件读写相关方法
 	private final File file;
 
 	/** 覆盖本地数据 */
-	public void overwriteData() {
-		String storeStr = clocks.stream().filter(o -> o.getText() != null).map(ClockData::toStoreString).
+	private void overwriteData() {
+		String storeStr = clocks.stream().filter(o -> o.getShowDate() != null).map(ClockData::toStoreString).
 			reduce((sum, o) -> sum + '\n' + o).orElse(null);
 
 		try {
-			// 检测文件名称是否被文件夹名占用
+			// 检测文件名称是否被占用
 			if (file.exists()) {
 				if (!file.isFile()) {
 					throw new IOException("数据存储文件'" + file.getAbsolutePath()
@@ -95,9 +103,8 @@ public class DataSource {
 
 		clocks = new ArrayList<>();
 		if(data != null){
-			int i = 0;
 			for (String s : data.split("\\n")) {
-				clocks.add(new ClockData(++i, s));
+				clocks.add(new ClockData(s));
 			}
 		}
 	}

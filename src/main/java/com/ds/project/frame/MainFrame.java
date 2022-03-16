@@ -9,7 +9,6 @@ import com.ds.project.preset.DraggableFrame;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Time;
 
 /**
  * 程序主窗体
@@ -98,9 +97,6 @@ public class MainFrame extends DraggableFrame {
 
 		addFollowDialog(topDialog);
 	}
-
-	private final long SHOW_TIME = 60000;
-	private final long DAY_MILLI = 86400000;
 
 	private boolean showMsgDialog = false;
 

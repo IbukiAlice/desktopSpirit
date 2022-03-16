@@ -27,7 +27,11 @@ public class ClockItemPanel extends JPanel {
 	private JTextField time;
 	private JTextField text;
 
-	public ClockItemPanel(int clockId, TopEditableDialog owner){
+	private int clockId;
+
+	public ClockItemPanel(int id, TopEditableDialog owner){
+		this.clockId = id;
+
 		setLayout(new FlowLayout(FlowLayout.LEFT, 2, 5));		// 设置布局
 		setOpaque(false);													// 面板透明
 
@@ -45,7 +49,7 @@ public class ClockItemPanel extends JPanel {
 		add(time);
 		add(text);
 
-		setInfo(clockId);
+		updateInfo(id);
 
 		JButton confirm = new JButton(icons[0]);
 		confirm.setPreferredSize(new Dimension(icons[0].getIconWidth() + 2, icons[0].getIconHeight()));
@@ -62,29 +66,27 @@ public class ClockItemPanel extends JPanel {
 		confirm.addActionListener(e -> {
 			try {
 				long timeMilli = df.parse(time.getText()).getTime();
-				DataSource.me().getClock(clockId).resetTime(timeMilli, text.getText());
-				DataSource.me().overwriteData();
+				DataSource.me().resetClock(clockId, timeMilli, text.getText());
 			} catch (ParseException ex) {
 				ex.printStackTrace();
 			}
 		});
 
-		remove.addActionListener(e -> {
-			DataSource.me().removeClock(clockId);
-			DataSource.me().overwriteData();
-			owner.removeSelfAndUpdateOtherClockItemPanel(this);
-		});
+		remove.addActionListener(e -> owner.removeSelfAndUpdateOtherClockItemPanel(this));
+	}
+
+	public int getClockId(){
+		return clockId;
 	}
 
 	/**
-	 * 设置闹钟信息
+	 * 更新闹钟信息
 	 * @param clockId	闹钟数据ID
 	 */
-	public void setInfo(int clockId){
-
+	public void updateInfo(int clockId){
 		ClockData clockData = DataSource.me().getClock(clockId);
 
-		idLabel.setText(String.format("%02d", clockData.getId()));
+		idLabel.setText(String.format("%02d", clockId + 1));
 		if(clockData.getShowDate() != null) time.setText(clockData.getShowDate());
 		if(clockData.getText() != null) text.setText(clockData.getText());
 	}
