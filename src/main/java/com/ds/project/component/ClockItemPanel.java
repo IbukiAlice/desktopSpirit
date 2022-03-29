@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 /**
- * 每条时间记录面板
+ * 单条时间记录面板
  * @author IbukiAlice
  */
 public class ClockItemPanel extends JPanel {

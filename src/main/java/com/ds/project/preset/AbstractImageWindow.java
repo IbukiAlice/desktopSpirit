@@ -3,6 +3,10 @@ package com.ds.project.preset;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * 带背景的对话框
+ * @author IbukiAlice
+ */
 public abstract class AbstractImageWindow extends JDialog {
 
 	public AbstractImageWindow(Window window){
@@ -35,5 +39,8 @@ public abstract class AbstractImageWindow extends JDialog {
 		getLayeredPane().add(background);
 	}
 
+	/**
+	 * 获取背景图片，窗口大小将会与背景图片一致
+	 */
 	public abstract ImageIcon getBackgroundIcon();
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -73,7 +74,7 @@ public class DataSource {
 			if (storeStr == null) return;
 
 			FileOutputStream out = new FileOutputStream(file);
-			out.write(storeStr.getBytes());
+			out.write(storeStr.getBytes(StandardCharsets.UTF_8));
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -94,7 +95,7 @@ public class DataSource {
 					start += len;
 				}
 
-				data = new String(bytes);
+				data = new String(bytes, StandardCharsets.UTF_8);
 
 			} catch (IOException e){
 				e.printStackTrace();
